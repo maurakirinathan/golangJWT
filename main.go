@@ -125,13 +125,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//validate user credentials
-	if strings.ToLower(user.Username) != "mauran" {
-		if user.Password != "p@ssword" {
-			w.WriteHeader(http.StatusForbidden)
-			fmt.Println("Error logging in")
-			fmt.Fprint(w, "Invalid credentials")
-			return
-		}
+	if (strings.ToLower(user.Username) != "mauran") || (user.Password != "p@ssword") {
+		w.WriteHeader(http.StatusForbidden)
+		fmt.Println("Error logging in")
+		fmt.Fprint(w, "Invalid credentials")
+		return
 	}
 
 	//create a rsa 256 token(signer)
