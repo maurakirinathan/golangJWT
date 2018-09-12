@@ -2,7 +2,7 @@
 JWT Authorization token with golang
 
 
-##imports
+## imports
 	"github.com/codegangsta/negroni"
   	"github.com/dgrijalva/jwt-go"
   	"github.com/dgrijalva/jwt-go/request"
