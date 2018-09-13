@@ -1,9 +1,9 @@
-package main
+package src
 
 //  Generate RSA signing files via shell (adjust as needed):
 //
-//  $ openssl genrsa -out app.rsa 1024
-//  $ openssl rsa -in app.rsa -pubout > app.rsa.pub
+//  $ openssl genrsa -out app..keys 1024
+//  $ openssl .keys -in app..keys -pubout > app..keys.pub
 //
 // Code borrowed and modified from the following sources:
 // https://www.youtube.com/watch?v=dgJFeqeXVKw
@@ -29,8 +29,8 @@ import (
 
 const (
 	// For simplicity these files are in the same folder as the app binary.
-	privKeyPath = "/home/mauran/Desktop/rsakeys/app.rsa"
-	pubKeyPath  = "/home/mauran/Desktop/rsakeys/app.rsa.pub"
+	privKeyPath = "/home/mauran/Desktop/rsakeys/app..keys"
+	pubKeyPath  = "/home/mauran/Desktop/rsakeys/app..keys.pub"
 )
 
 var (
@@ -45,13 +45,13 @@ func fatal(err error) {
 }
 
 func initKeys() {
-	signBytes, err := ioutil.ReadFile(privKeyPath)
+   signBytes, err := ioutil.ReadFile(config.idRsa)
 	fatal(err)
 
 	signKey, err = jwt.ParseRSAPrivateKeyFromPEM(signBytes)
 	fatal(err)
 
-	verifyBytes, err := ioutil.ReadFile(pubKeyPath)
+	verifyBytes, err := ioutil.ReadFile(config.idRsaPub)
 	fatal(err)
 
 	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
@@ -81,7 +81,6 @@ type Token struct {
 
 //SERVER ENTRY POINT
 func StartServer() {
-
 	// Non-Protected Endpoint(s)
 	http.HandleFunc("/login", LoginHandler)
 
@@ -99,13 +98,12 @@ func StartServer() {
 }
 
 func main() {
-
 	initKeys()
+
 	StartServer()
 }
 
 func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
-
 	response := Response{"Gained access to protected resource"}
 	JsonResponse(response, w)
 
@@ -117,7 +115,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	//decode request into UserCredentials struct
 	err := json.NewDecoder(r.Body).Decode(&user)
-
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		fmt.Fprint(w, "Error in request")
@@ -132,7 +129,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//create a rsa 256 token(signer)
+	//create a .keys 256 token(signer)
 	token := jwt.New(jwt.SigningMethodRS256)
 
 	//set claims
@@ -146,7 +143,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	token.Claims = claims
 
 	tokenString, err := token.SignedString(signKey)
-
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, "Error while signing the token")
@@ -156,12 +152,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	//create a token instance using the token string
 	response := Token{tokenString}
 	JsonResponse(response, w)
-
 }
 
 //AUTH TOKEN VALIDATION
 func ValidateTokenMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
 	//validate token
 	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
 		func(token *jwt.Token) (interface{}, error) {
@@ -179,12 +173,10 @@ func ValidateTokenMiddleware(w http.ResponseWriter, r *http.Request, next http.H
 		w.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprint(w, "Unauthorized access to this resource")
 	}
-
 }
 
 //HELPER FUNCTIONS
 func JsonResponse(response interface{}, w http.ResponseWriter) {
-
 	json, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
