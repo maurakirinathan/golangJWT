@@ -1,6 +1,6 @@
 FROM golang:1.9
 
-MAINTAINER Eranga Bandara (erangaeb@gmail.com)
+MAINTAINER P.Mauran (maurakiri@gmail.com)
 
 # install dependencies
 RUN go get github.com/codegangsta/negroni
