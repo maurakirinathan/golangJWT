@@ -1,4 +1,4 @@
-package src
+package main
 
 import "os"
 
@@ -10,7 +10,7 @@ type Config struct {
 
 var config = Config{
 	idRsa:      getEnv("ID_RSA", ".keys/app.rsa"),
-	idRsaPub:   getEnv("ID_RSA_PUB", "..keys/app.rsa.pub"),
+	idRsaPub:   getEnv("ID_RSA_PUB", ".keys/app.rsa.pub"),
 	hostPort:   getEnv("HPORT", "8002"),
 }
 

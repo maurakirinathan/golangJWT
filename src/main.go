@@ -1,4 +1,4 @@
-package src
+package main
 
 //  Generate RSA signing files via shell (adjust as needed):
 //

@@ -1,4 +1,3 @@
 #!/bin/bash
 
-build/gojwt
-
+build/go11
