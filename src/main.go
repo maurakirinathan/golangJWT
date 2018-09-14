@@ -94,7 +94,7 @@ func StartServer() {
 	))
 
 	log.Println("Now listening...")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+ config.hostPort, nil)
 }
 
 func main() {

@@ -1,3 +1,4 @@
 #!/bin/bash
 
-build/main
+build/gojwt
+
