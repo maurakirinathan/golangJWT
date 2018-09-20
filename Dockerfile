@@ -6,6 +6,7 @@ MAINTAINER P.Mauran (maurakiri@gmail.com)
 RUN go get github.com/codegangsta/negroni
 RUN	go get github.com/dgrijalva/jwt-go
 RUN go get github.com/dgrijalva/jwt-go/request
+RUN go get github.com/gorilla/mux
 
 # env
 ENV HPORT 8002
